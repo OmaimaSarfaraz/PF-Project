@@ -226,3 +226,55 @@ void viewAttendance() {
         cout << "No attendance records found for this course.\n";
     }
 }
+int main() {
+    loadStudentsFromFile();
+    loadCoursesFromFile();
+
+    if (!login()) {
+        return 0;
+    }
+
+    int choice;
+    do {
+        cout << "\nUniversity Management System\n";
+        cout << "1. Add Student\n";
+        cout << "2. View Students\n";
+        cout << "3. Add Course\n";
+        cout << "4. View Courses\n";
+        cout << "5. Mark Attendance\n";
+        cout << "6. View Attendance\n";
+        cout << "7. Save and Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {  // Check for invalid input
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Invalid choice. Please enter a number.\n";
+            continue;
+        }
+
+        switch (choice) {
+        case 1: {
+            int id;
+            string name, department;
+            cout << "Enter student ID: ";
+            cin >> id;
+            cin.ignore();
+            cout << "Enter student name: ";
+            getline(cin, name);
+            cout << "Enter student department: ";
+            getline(cin, department);
+            students[studentCount].id = id;
+            students[studentCount].name = name;
+            students[studentCount].department = department;
+            ++studentCount;
+            break;
+        }
+        case 2: {
+            cout << "\nList of Students:\n";
+            for (int i = 0; i < studentCount; ++i) {
+                displayStudent(students[i]);
+            }
+            break;
+        }
