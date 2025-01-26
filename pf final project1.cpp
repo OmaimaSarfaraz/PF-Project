@@ -123,69 +123,52 @@ void loadCoursesFromFile() {
 }
 
 void markAttendance() {
-    int courseId, studentId;
-    bool isPresent;
+    int courseId, studentId, status;
 
     cout << "Enter course ID to mark attendance: ";
     cin >> courseId;
-    if (cin.fail()) {  // Check for invalid input
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "Invalid course ID. Please enter a valid number.\n";
-        return;
-    }
 
-    bool courseFound = false;
+    // Find the course by ID
+    int courseIndex = -1;
     for (int i = 0; i < courseCount; ++i) {
         if (courses[i].courseId == courseId) {
-            courseFound = true;
+            courseIndex = i;
             break;
         }
     }
-    if (!courseFound) {
+
+    if (courseIndex == -1) {
         cout << "Invalid course ID.\n";
         return;
     }
 
     cout << "Enter student ID to mark attendance: ";
     cin >> studentId;
-    if (cin.fail()) {  // Check for invalid input
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "Invalid student ID. Please enter a valid number.\n";
-        return;
-    }
 
-    bool studentFound = false;
+    // Find the student by ID
+    int studentIndex = -1;
     for (int i = 0; i < studentCount; ++i) {
         if (students[i].id == studentId) {
-            studentFound = true;
+            studentIndex = i;
             break;
         }
     }
-    if (!studentFound) {
+
+    if (studentIndex == -1) {
         cout << "Invalid student ID.\n";
         return;
     }
 
     cout << "Enter attendance status (1 for present, 0 for absent): ";
-    cin >> isPresent;
-    if (cin.fail()) {  // Check for invalid input
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "Invalid input. Please enter 1 or 0.\n";
-        return;
-    }
+    cin >> status;
 
-    for (int i = 0; i < studentCount; ++i) {
-        if (students[i].id == studentId) {
-            attendance[courseId][i].studentId = studentId;
-            attendance[courseId][i].isPresent = isPresent;
-            cout << "Attendance for student " << students[i].name << " has been marked as "
-                 << (isPresent ? "Present" : "Absent") << ".\n";
-            break;
-        }
-    }
+    // Mark attendance
+    attendance[courseIndex][studentIndex].studentId = studentId;
+    attendance[courseIndex][studentIndex].isPresent = (status == 1);
+
+    cout << "Attendance for student " << students[studentIndex].name 
+         << " has been marked as " 
+         << (status == 1 ? "Present" : "Absent") << ".\n";
 }
 
 void viewAttendance() {
@@ -193,31 +176,29 @@ void viewAttendance() {
 
     cout << "Enter course ID to view attendance: ";
     cin >> courseId;
-    if (cin.fail()) {  // Check for invalid input
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cout << "Invalid course ID. Please enter a valid number.\n";
-        return;
-    }
 
-    bool courseFound = false;
+    // Find the course by ID
+    int courseIndex = -1;
     for (int i = 0; i < courseCount; ++i) {
         if (courses[i].courseId == courseId) {
-            courseFound = true;
+            courseIndex = i;
             break;
         }
     }
-    if (!courseFound) {
+
+    if (courseIndex == -1) {
         cout << "Invalid course ID.\n";
         return;
     }
 
-    cout << "\nAttendance for Course: " << courses[courseId].courseName << "\n";
+    cout << "\nAttendance for Course: " << courses[courseIndex].courseName << "\n";
     bool attendanceFound = false;
 
+    // Loop through all students and check attendance
     for (int i = 0; i < studentCount; ++i) {
-        if (attendance[courseId][i].studentId != 0) {
-            cout << students[i].name << " - " << (attendance[courseId][i].isPresent ? "Present" : "Absent") << endl;
+        if (attendance[courseIndex][i].studentId == students[i].id) {
+            cout << students[i].name << " - "
+                 << (attendance[courseIndex][i].isPresent ? "Present" : "Absent") << endl;
             attendanceFound = true;
         }
     }
@@ -226,6 +207,7 @@ void viewAttendance() {
         cout << "No attendance records found for this course.\n";
     }
 }
+
 int main() {
     loadStudentsFromFile();
     loadCoursesFromFile();
