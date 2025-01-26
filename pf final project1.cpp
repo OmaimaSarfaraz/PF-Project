@@ -28,3 +28,36 @@ bool login() {
     cout << "Invalid username or password.\n";
     return false;
 }
+struct Student {
+    int id;
+    string name;
+    string department;
+};
+
+// Course data
+struct Course {
+    int courseId;
+    string courseName;
+    string instructor;
+};
+
+// Attendance data
+struct Attendance {
+    int studentId;
+    bool isPresent;  // true for present, false for absent
+};
+
+Student students[100];
+Course courses[100];
+Attendance attendance[100][100];  // Assuming a max of 100 students and 100 courses
+
+int studentCount = 0;
+int courseCount = 0;
+
+void displayStudent(const Student& student) {
+    cout << "ID: " << student.id << ", Name: " << student.name << ", Department: " << student.department << endl;
+}
+
+void displayCourse(const Course& course) {
+    cout << "Course ID: " << course.courseId << ", Course Name: " << course.courseName << ", Instructor: " << course.instructor << endl;
+}
