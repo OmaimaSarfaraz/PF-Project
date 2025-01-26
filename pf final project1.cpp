@@ -278,3 +278,47 @@ int main() {
             }
             break;
         }
+        case 3: {
+            int courseId;
+            string courseName, instructor;
+            cout << "Enter course ID: ";
+            cin >> courseId;
+            cin.ignore();
+            cout << "Enter course name: ";
+            getline(cin, courseName);
+            cout << "Enter instructor name: ";
+            getline(cin, instructor);
+            courses[courseCount].courseId = courseId;
+            courses[courseCount].courseName = courseName;
+            courses[courseCount].instructor = instructor;
+            ++courseCount;
+            break;
+        }
+        case 4: {
+            cout << "\nList of Courses:\n";
+            for (int i = 0; i < courseCount; ++i) {
+                displayCourse(courses[i]);
+            }
+            break;
+        }
+        case 5: {
+            markAttendance();
+            break;
+        }
+        case 6: {
+            viewAttendance();
+            break;
+        }
+        case 7: {
+            saveStudentsToFile();
+            saveCoursesToFile();
+            cout << "Data saved successfully. Exiting..." << endl;
+            break;
+        }
+        default:
+            cout << "Invalid choice. Please try again." << endl;
+        }
+    } while (choice != 7);
+
+    return 0;
+}
