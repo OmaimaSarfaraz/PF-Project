@@ -187,3 +187,42 @@ void markAttendance() {
         }
     }
 }
+
+void viewAttendance() {
+    int courseId;
+
+    cout << "Enter course ID to view attendance: ";
+    cin >> courseId;
+    if (cin.fail()) {  // Check for invalid input
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout << "Invalid course ID. Please enter a valid number.\n";
+        return;
+    }
+
+    bool courseFound = false;
+    for (int i = 0; i < courseCount; ++i) {
+        if (courses[i].courseId == courseId) {
+            courseFound = true;
+            break;
+        }
+    }
+    if (!courseFound) {
+        cout << "Invalid course ID.\n";
+        return;
+    }
+
+    cout << "\nAttendance for Course: " << courses[courseId].courseName << "\n";
+    bool attendanceFound = false;
+
+    for (int i = 0; i < studentCount; ++i) {
+        if (attendance[courseId][i].studentId != 0) {
+            cout << students[i].name << " - " << (attendance[courseId][i].isPresent ? "Present" : "Absent") << endl;
+            attendanceFound = true;
+        }
+    }
+
+    if (!attendanceFound) {
+        cout << "No attendance records found for this course.\n";
+    }
+}
