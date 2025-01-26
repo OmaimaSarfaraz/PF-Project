@@ -91,4 +91,99 @@ void loadStudentsFromFile() {
     }
     inFile.close();
 }
+void saveCoursesToFile() {
+    ofstream outFile("courses.txt");
+    if (!outFile) {
+        cout << "Error: Unable to save courses to file.\n";
+        return;
+    }
+    for (int i = 0; i < courseCount; ++i) {
+        outFile << courses[i].courseId << "\n" << courses[i].courseName << "\n" << courses[i].instructor << "\n";
+    }
+    outFile.close();
+}
 
+void loadCoursesFromFile() {
+    ifstream inFile("courses.txt");
+    if (!inFile) {
+        cout << "Note: No existing course data found. Starting fresh.\n";
+        return;
+    }
+    courseCount = 0;
+    while (inFile) {
+        Course c;
+        inFile >> c.courseId;
+        inFile.ignore();  // Ignore newline after reading courseId
+        if (inFile.eof()) break;
+        getline(inFile, c.courseName);
+        getline(inFile, c.instructor);
+        courses[courseCount++] = c;
+    }
+    inFile.close();
+}
+
+void markAttendance() {
+    int courseId, studentId;
+    bool isPresent;
+
+    cout << "Enter course ID to mark attendance: ";
+    cin >> courseId;
+    if (cin.fail()) {  // Check for invalid input
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout << "Invalid course ID. Please enter a valid number.\n";
+        return;
+    }
+
+    bool courseFound = false;
+    for (int i = 0; i < courseCount; ++i) {
+        if (courses[i].courseId == courseId) {
+            courseFound = true;
+            break;
+        }
+    }
+    if (!courseFound) {
+        cout << "Invalid course ID.\n";
+        return;
+    }
+
+    cout << "Enter student ID to mark attendance: ";
+    cin >> studentId;
+    if (cin.fail()) {  // Check for invalid input
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout << "Invalid student ID. Please enter a valid number.\n";
+        return;
+    }
+
+    bool studentFound = false;
+    for (int i = 0; i < studentCount; ++i) {
+        if (students[i].id == studentId) {
+            studentFound = true;
+            break;
+        }
+    }
+    if (!studentFound) {
+        cout << "Invalid student ID.\n";
+        return;
+    }
+
+    cout << "Enter attendance status (1 for present, 0 for absent): ";
+    cin >> isPresent;
+    if (cin.fail()) {  // Check for invalid input
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cout << "Invalid input. Please enter 1 or 0.\n";
+        return;
+    }
+
+    for (int i = 0; i < studentCount; ++i) {
+        if (students[i].id == studentId) {
+            attendance[courseId][i].studentId = studentId;
+            attendance[courseId][i].isPresent = isPresent;
+            cout << "Attendance for student " << students[i].name << " has been marked as "
+                 << (isPresent ? "Present" : "Absent") << ".\n";
+            break;
+        }
+    }
+}
