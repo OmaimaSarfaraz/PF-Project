@@ -28,6 +28,7 @@ bool login() {
     cout << "Invalid username or password.\n";
     return false;
 }
+
 struct Student {
     int id;
     string name;
@@ -61,6 +62,7 @@ void displayStudent(const Student& student) {
 void displayCourse(const Course& course) {
     cout << "Course ID: " << course.courseId << ", Course Name: " << course.courseName << ", Instructor: " << course.instructor << endl;
 }
+
 void saveStudentsToFile() {
     ofstream outFile("students.txt");
     if (!outFile) {
@@ -91,6 +93,7 @@ void loadStudentsFromFile() {
     }
     inFile.close();
 }
+
 void saveCoursesToFile() {
     ofstream outFile("courses.txt");
     if (!outFile) {
@@ -122,13 +125,25 @@ void loadCoursesFromFile() {
     inFile.close();
 }
 
+int getIntegerInput(const string& prompt) {
+    int value;
+    while (true) {
+        cout << prompt;
+        cin >> value;
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Invalid input. Please enter an integer value.\n";
+        } else {
+            return value;
+        }
+    }
+}
+
 void markAttendance() {
-    int courseId, studentId, status;
+    int courseId = getIntegerInput("Enter course ID to mark attendance: ");
 
-    cout << "Enter course ID to mark attendance: ";
-    cin >> courseId;
-
-    // Find the course by ID
     int courseIndex = -1;
     for (int i = 0; i < courseCount; ++i) {
         if (courses[i].courseId == courseId) {
@@ -142,10 +157,8 @@ void markAttendance() {
         return;
     }
 
-    cout << "Enter student ID to mark attendance: ";
-    cin >> studentId;
+    int studentId = getIntegerInput("Enter student ID to mark attendance: ");
 
-    // Find the student by ID
     int studentIndex = -1;
     for (int i = 0; i < studentCount; ++i) {
         if (students[i].id == studentId) {
@@ -159,10 +172,8 @@ void markAttendance() {
         return;
     }
 
-    cout << "Enter attendance status (1 for present, 0 for absent): ";
-    cin >> status;
+    int status = getIntegerInput("Enter attendance status (1 for present, 0 for absent): ");
 
-    // Mark attendance
     attendance[courseIndex][studentIndex].studentId = studentId;
     attendance[courseIndex][studentIndex].isPresent = (status == 1);
 
@@ -172,12 +183,8 @@ void markAttendance() {
 }
 
 void viewAttendance() {
-    int courseId;
+    int courseId = getIntegerInput("Enter course ID to view attendance: ");
 
-    cout << "Enter course ID to view attendance: ";
-    cin >> courseId;
-
-    // Find the course by ID
     int courseIndex = -1;
     for (int i = 0; i < courseCount; ++i) {
         if (courses[i].courseId == courseId) {
@@ -194,7 +201,6 @@ void viewAttendance() {
     cout << "\nAttendance for Course: " << courses[courseIndex].courseName << "\n";
     bool attendanceFound = false;
 
-    // Loop through all students and check attendance
     for (int i = 0; i < studentCount; ++i) {
         if (attendance[courseIndex][i].studentId == students[i].id) {
             cout << students[i].name << " - "
@@ -238,11 +244,10 @@ int main() {
 
         switch (choice) {
         case 1: {
-            int id;
+            int id = getIntegerInput("Enter student ID: ");
             string name, department;
-            cout << "Enter student ID: ";
-            cin >> id;
-            cin.ignore();
+            
+            cin.ignore(); // Clear the input buffer
             cout << "Enter student name: ";
             getline(cin, name);
             cout << "Enter student department: ";
@@ -261,11 +266,10 @@ int main() {
             break;
         }
         case 3: {
-            int courseId;
+            int courseId = getIntegerInput("Enter course ID: ");
             string courseName, instructor;
-            cout << "Enter course ID: ";
-            cin >> courseId;
-            cin.ignore();
+            
+            cin.ignore(); // Clear the input buffer
             cout << "Enter course name: ";
             getline(cin, courseName);
             cout << "Enter instructor name: ";
@@ -304,3 +308,4 @@ int main() {
 
     return 0;
 }
+
